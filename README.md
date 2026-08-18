@@ -1,179 +1,177 @@
+﻿# AlgoVision
 
-# AlgoVision - Interactive Algorithm Visualization Platform
+AlgoVision is an interactive learning platform for understanding algorithms through visual execution, complexity analysis, and quiz-based practice. It blends a React + TypeScript frontend with a Node.js + Express backend for authentication, quiz persistence, and AI-assisted tutoring.
 
-A full-stack educational web application for learning data structures and algorithms through interactive visualizations, AI-powered insights, and knowledge testing.
+The project is structured as a monorepo so the frontend and backend can run together while still keeping the app logic organized.
 
-## 🏗️ Architecture
+## Features
 
-This project is now separated into **Frontend** and **Backend**:
+- Algorithm visualizer for sorting and searching
+  - Quick Sort
+  - Merge Sort
+  - Selection Sort
+  - Insertion Sort
+  - Binary Search
+  - Linear Search
+- Complexity analysis for algorithm performance and recommendation logic
+- Quiz system with randomized practice questions and score tracking
+- User authentication with JWT-based protected routes
+- Backend storage for quiz history and leaderboard data in MongoDB
+- AI-style guidance using the Google Gemini API when configured
+- Local fallback heuristics so the app remains usable while backend services are offline or not configured
 
-- **Frontend**: React + TypeScript + Vite (Port 3000)
-- **Backend**: Node.js + Express + Google Gemini AI (Port 5000)
+## Tech stack
 
-## 📁 Project Structure
+Frontend
+- React 19
+- TypeScript
+- Vite
+- Tailwind-like utility styling patterns used across components
 
+Backend
+- Node.js
+- Express
+- MongoDB with Mongoose
+- JWT auth via `jsonwebtoken`
+- Password hashing with `bcryptjs`
+- Google Gemini integration via `@google/genai`
+
+## Repository structure
+
+```text
+AlgoVision/
+├── backend/
+│   ├── config/
+│   │   └── db.js
+│   ├── controllers/
+│   │   ├── aiController.js
+│   │   ├── authController.js
+│   │   └── quizController.js
+│   ├── middleware/
+│   │   └── authMiddleware.js
+│   ├── models/
+│   │   ├── QuizResult.js
+│   │   └── User.js
+│   ├── routes/
+│   │   ├── aiRoutes.js
+│   │   ├── authRoutes.js
+│   │   └── quizRoutes.js
+│   ├── .env.example
+│   ├── package.json
+│   └── server.js
+├── components/
+├── services/
+│   └── apiService.ts
+├── App.tsx
+├── package.json
+├── .env.example
+├── quizQuestions.ts
+├── types.ts
+├── vite.config.ts
+├── index.html
+├── tsconfig.json
+└── README.md
 ```
-project mini/
-├── backend/                 # Backend API Server
-│   ├── controllers/         # Request handlers
-│   ├── middleware/          # Authentication middleware
-│   ├── models/              # Data models
-│   ├── routes/              # API routes
-│   ├── services/            # Business logic & AI services
-│   ├── server.js            # Express server entry point
-│   ├── package.json         # Backend dependencies
-│   └── .env                 # Backend environment variables
-│
-├── components/              # React components (Frontend)
-├── services/                # Frontend API service
-├── utils/                   # Helper functions
-├── App.tsx                  # Root React component
-├── package.json             # Frontend dependencies
-└── .env.local               # Frontend environment variables
-```
 
-## 🚀 Quick Start
+## Getting started
 
 ### Prerequisites
 
-- **Node.js** (v18 or higher)
-- **MongoDB** (local instance or MongoDB Atlas)
-- **Google Gemini API Key** ([Get one here](https://ai.google.dev/))
+- Node.js 18 or newer
+- npm
+- MongoDB running locally or a MongoDB Atlas connection URI
+- A valid Google Gemini API key if you want live AI responses
 
-### Installation & Setup
+### 1. Install dependencies
 
-#### 1. Install Backend Dependencies
+Frontend:
 
-```powershell
+```bash
+npm install
+```
+
+Backend:
+
+```bash
 cd backend
 npm install
 ```
 
-#### 2. Configure Backend
+### 2. Configure environment variables
 
-Update `backend/.env` with your credentials:
+Copy the example environment files and fill in the values you need:
+
+```bash
+cp .env.example .env
+cp backend/.env.example backend/.env
+```
+
+The frontend `.env` should include:
+
 ```env
-GEMINI_API_KEY=your_actual_gemini_api_key_here
-JWT_SECRET=your_secure_jwt_secret
-MONGODB_URI=mongodb://localhost:27017/algovision
+VITE_API_URL=http://localhost:5000/api
+```
+
+The backend `.env` should include:
+
+```env
 PORT=5000
-FRONTEND_URL=http://localhost:3000
+MONGODB_URI=mongodb://localhost:27017/algovision
+JWT_SECRET=your-secret-key
+GEMINI_API_KEY=your-google-gemini-key
 ```
 
-#### 3. Install Frontend Dependencies
+### 3. Run the app
 
-```powershell
-cd ..
-npm install
-```
+From the repo root:
 
-#### 4. Run Backend Server
-
-```powershell
-cd backend
+```bash
 npm run dev
 ```
 
-Backend will start on: http://localhost:5000
+This starts the frontend and backend together using the monorepo scripts.
 
-#### 5. Run Frontend (New Terminal)
+You can also start the stacks individually:
 
-```powershell
-npm run dev
+```bash
+npm run dev:frontend
+npm run dev:backend
 ```
 
-Frontend will start on: http://localhost:3000
+## API endpoints
 
-### Access the Application
+### Auth
 
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:5000/api/health
+- `POST /api/auth/signup`
+- `POST /api/auth/login`
+- `GET /api/auth/verify`
+- `GET /api/auth/profile`
 
-## 📡 API Endpoints
+### Quiz
 
-### Authentication
-- `POST /api/auth/signup` - Create new account (@sode-edu.in emails only)
-- `POST /api/auth/login` - User login
-- `GET /api/auth/verify` - Verify JWT token
+- `POST /api/quiz/submit`
+- `GET /api/quiz/history`
+- `GET /api/quiz/leaderboard`
 
-### AI Services (Requires Authentication)
-- `POST /api/ai/algorithm-suggestion` - Get AI algorithm recommendations
-- `POST /api/ai/complexity-analysis` - Get complexity analysis
-- `POST /api/ai/generate-video` - Generate video with Veo 3.1
-- `POST /api/ai/chat` - AI chat responses
+### AI
 
-## 🔧 Tech Stack
+- `POST /api/ai/chat`
+- `POST /api/ai/complexity-analysis`
+- `POST /api/ai/algorithm-suggestion`
 
-### Frontend
-- React 19.2.0, TypeScript 5.8.2, Vite 6.2.0
-- Tailwind CSS, Chart.js, html2canvas, jsPDF
+## Notes
 
-### Backend
-- Node.js, Express 4.19, JWT, bcryptjs
-- MongoDB, Mongoose 8.8.0
-- Google Gemini AI 1.29.0 (Gemini 2.5 Flash + Veo 3.1)
+- The frontend now tries real API requests against `VITE_API_URL` and attaches the bearer token automatically when present.
+- If the backend is unavailable, the app keeps local fallback behavior so the experience still works during development.
+- MongoDB and Gemini must be configured for the full-stack experience to be fully live.
+- Quiz results are stored locally and can also be submitted to the backend when a valid JWT exists.
 
-## ✨ Features
+## Production build
 
-1. **Algorithm Visualizer** - Step-by-step visualization of sorting & searching
-2. **Complexity Analyzer** - Compare algorithm performance with AI insights
-3. **Interactive Quiz** - 50+ questions with instant feedback
-4. **AI Video Generation** - Create videos from images using Veo
-5. **Export & Reporting** - PDF reports with analytics
+```bash
+npm run build
+```
 
-## 🔐 Security
+## License
 
-- JWT authentication with 7-day expiration
-- Password hashing with bcrypt
-- Email domain restriction
-- CORS protection
-
-## 🐛 Troubleshooting
-
-**Backend won't start:**
-- Check if port 5000 is available
-- Verify GEMINI_API_KEY and MONGODB_URI in `backend/.env`
-- Ensure MongoDB is running locally or accessible via your connection string
-
-**Port already in use (EADDRINUSE):**
-- Find and stop the process using port 5000:
-  ```powershell
-  Get-NetTCPConnection -LocalPort 5000 -State Listen | Format-Table -AutoSize LocalAddress,LocalPort,State,OwningProcess
-  Stop-Process -Id <OwningProcessPID> -Force
-  ```
-- Alternatively, use a different port:
-  ```powershell
-  # Backend
-  cd backend
-  $env:PORT="5001"; npm run dev
-  # Frontend (new terminal)
-  $env:VITE_API_URL="http://localhost:5001"; npm run dev
-  ```
-
-**MongoDB error: "db already exists with different case" (Windows):**
-- The server normalizes DB names to lowercase. If an uppercase DB exists, drop it:
-  ```powershell
-  mongosh
-  show dbs
-  use ALGOVISION
-  db.dropDatabase()
-  exit
-  ```
-- Set `MONGODB_URI=mongodb://localhost:27017/algovision` (lowercase) in `backend/.env`
-
-**API calls failing:**
-- Ensure backend is running on port 5000
-- Check browser console for errors
-- Clear localStorage if authentication fails
-- Verify `VITE_API_URL` is set to base URL only (e.g., `http://localhost:5000`), not including `/api`
-
-**Health check:**
-- Verify server and DB status:
-  ```powershell
-  Invoke-RestMethod -UseBasicParsing http://localhost:5000/api/health | ConvertTo-Json -Depth 3
-  ```
-  Expect: `{ "status": "ok", "message": "AlgoVision Backend API is running", "db": "connected" }`
-
----
-
-**Note**: Requires Google Gemini API key for AI features. Get yours at [Google AI Studio](https://ai.google.dev/)
+This project does not currently include a repo-level open-source license file.

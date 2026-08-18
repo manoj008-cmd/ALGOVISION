@@ -23,6 +23,7 @@ export interface QuizQuestion {
   options: string[];
   correctAnswer: string;
   explanation: string;
+  topic?: string;
 }
 
 export interface QuizAttempt {

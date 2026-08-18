@@ -21,8 +21,8 @@ const Auth: React.FC<AuthProps> = ({ onLogin }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const validateEmail = (email: string) => {
-    if (!email.endsWith('@sode-edu.in')) {
-      return 'Access restricted to @sode-edu.in emails only.';
+    if (!email || !email.includes('@')) {
+      return 'Please enter a valid email address.';
     }
     return null;
   };
